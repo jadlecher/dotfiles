@@ -16,8 +16,13 @@ return {
           type = 'gdb',
           request = 'launch',
           program = function()
-            return vim.fn.input('Path to executable: ',
-              vim.fn.getcwd() .. '/build', 'file')
+            cmake_executable = require('utils.find-cmake-executable').find()
+            if cmake_executable ~= nil then
+              return cmake_executable
+            else
+              return vim.fn.input('Path to executable: ',
+                vim.fn.getcwd() .. '/build', 'file')
+            end
           end,
           cwd = "${workspaceFoldler}",
         }
