@@ -14,4 +14,6 @@ vim.keymap.set("n", "<leader>bk", dap.step_out)
 vim.keymap.set("n", "<leader>bh", dap.step_back)
 vim.keymap.set("n", "<leader>b.", dap.run_last)
 
+vim.keymap.set("n", "<leader>qf", "<cmd>lua vim.lsp.buf.code_action()<cr>")
+
 vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<cr>")
