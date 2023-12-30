@@ -1,14 +1,19 @@
-#!/bin/bash
-config_dir=${XDG_CONFIG_DIR} # try the default config directory
-fallback_config_dir=~/.config # alternative dir to use if the default directory does not exist
-if [ ! -d "${config_dir}" ]; then
-	echo "XDG_CONFIG_DIR is not defined. Using ${fallback_config_dir} instead."
-	config_dir="${fallback_config_dir}"
-	if [ ! -d "${config_dir}" ]; then
-		echo "${fallback_config_dir} does not exist, creating it."
-		mkdir "${config_dir}"
+#!/bin/bash -e
+target_dir=${XDG_CONFIG_DIR} # try the default config directory
+fallback_target_dir=~/.config # alternative dir to use if the default directory does not exist
+if [ ! -d "${target_dir}" ]; then
+	echo "XDG_CONFIG_DIR is not defined. Using ${fallback_target_dir} instead."
+	target_dir="${fallback_target_dir}"
+	if [ ! -d "${target_dir}" ]; then
+		echo "${fallback_target_dir} does not exist, creating it."
+		mkdir "${target_dir}"
 	fi
 fi
-nvim_config_dir=$(readlink -f ./nvim)
-echo "Creating symbolic link to this configuration (${nvim_config_dir}) in ${config_dir}."
-ln -sf  "${nvim_config_dir}" "${config_dir}" && echo "Done."
+for entry in */; do
+    if [ -d "$entry" ]; then
+      source_dir=$(readlink -f "${entry}")
+      echo "Creating symbolic link to configuration ${source_dir} in ${target_dir}."
+      ln -sf  "${source_dir}" "${target_dir}"
+    fi
+done
+echo "Done."
