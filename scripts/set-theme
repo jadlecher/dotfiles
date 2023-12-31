@@ -1,0 +1,47 @@
+#!/bin/bash
+gtk_light_theme="Catppuccin-Latte-Lavender"
+kitty_light_theme="Catppuccin-Latte"
+gtk_dark_theme="Catppuccin-Mocha-Lavender"
+kitty_dark_theme="Catppuccin-Mocha"
+
+set_gtk_theme() {
+	theme="$1"
+	xsettingsd_conf=~/.config/xsettingsd/xsettingsd.conf
+	echo 'Net/ThemeName "'$1'"' > $xsettingsd_conf
+	killall -HUP xsettingsd
+}
+
+set_vim_theme() {
+	# Send SIGUSR1 signal to all vim processes to trigger theme switch
+	for pid in $(pgrep vim)
+		do kill -SIGUSR1 $pid
+	done
+}
+
+script_name="set_theme"
+if [ $# -ne 1 ]; then
+	echo $script_name "requires a value"
+	exit 1
+fi
+
+theme="$1"
+case $theme in
+	light)
+		echo "setting light theme"
+		gtk_theme=$gtk_light_theme
+		kitty_theme=$kitty_light_theme
+		;;
+	dark)
+		echo "setting dark theme"
+		gtk_theme=$gtk_dark_theme
+		kitty_theme=$kitty_dark_theme
+		;;
+	*)
+		echo 'Unknown theme "'$theme'"'
+		exit 1
+		;;
+esac
+set_gtk_theme $gtk_theme
+kitty +kitten themes --reload-in=all $kitty_theme
+set_vim_theme
+exit 0
