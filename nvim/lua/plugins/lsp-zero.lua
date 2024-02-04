@@ -8,9 +8,7 @@ return {
     { 'williamboman/mason.nvim' },
     { 'williamboman/mason-lspconfig.nvim' },
     { 'hrsh7th/nvim-cmp' },
-    { 'hrsh7th/cmp-nvim-lua' },
     { 'hrsh7th/cmp-nvim-lsp' },
-    { 'hrsh7th/cmp-buffer' },
     { 'hrsh7th/cmp-path' },
     {
       'L3MON4D3/LuaSnip',
@@ -26,7 +24,7 @@ return {
       lsp_zero.default_keymaps({ buffer = bufnr })
     end)
 
-    require('neodev').setup({})  -- configure lua_ls settings for neovim plugin development
+    require('neodev').setup({}) -- configure lua_ls settings for neovim plugin development
     require('mason').setup({})
     require('mason-lspconfig').setup({
       ensure_installed = {
@@ -53,9 +51,14 @@ return {
     cmp.setup({
       sources = {
         { name = 'nvim_lua' },
-        { name = 'nvim_lsp' },
+        {
+          name = 'nvim_lsp',
+          entry_filter = function(entry, _)
+            -- disable lsp TEXT completion results
+            return entry:get_kind() ~= require("cmp").lsp.CompletionItemKind.Text
+          end
+        },
         { name = 'luasnip' },
-        { name = 'buffer',  keyword_length = 3 },
         { name = 'path' },
       },
       --- (Optional) Show source name in completion menu
