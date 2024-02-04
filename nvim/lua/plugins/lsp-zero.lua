@@ -2,6 +2,7 @@ return {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v3.x',
   dependencies = {
+    { 'folke/neodev.nvim' },
     { 'lukas-reineke/lsp-format.nvim' },
     { 'neovim/nvim-lspconfig' },
     { 'williamboman/mason.nvim' },
@@ -21,13 +22,11 @@ return {
     local lsp_zero = require('lsp-zero')
     local lsp_format = require('lsp-format')
     lsp_format.setup({})
-    lsp_zero.on_attach(function(client, bufnr)
+    lsp_zero.on_attach(function(_, bufnr)
       lsp_zero.default_keymaps({ buffer = bufnr })
-      if client.supports_method('textDocument/formatting') then
-        lsp_format.on_attach(client)
-      end
     end)
 
+    require('neodev').setup({})  -- configure lua_ls settings for neovim plugin development
     require('mason').setup({})
     require('mason-lspconfig').setup({
       ensure_installed = {
@@ -46,17 +45,6 @@ return {
       },
       handlers = {
         lsp_zero.default_setup,
-        lua_ls = function()
-          require('lspconfig').lua_ls.setup({
-            settings = {
-              Lua = {
-                diagnostics = {
-                  disable = { 'lowercase-global' }
-                }
-              }
-            }
-          })
-        end
       }
     })
 
