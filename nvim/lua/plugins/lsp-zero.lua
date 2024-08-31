@@ -1,6 +1,6 @@
 return {
 	"VonHeikemen/lsp-zero.nvim",
-	branch = "v3.x",
+	branch = "v4.x",
 	dependencies = {
 		{ "folke/neodev.nvim" },
 		{ "lukas-reineke/lsp-format.nvim" },
@@ -21,9 +21,15 @@ return {
 		local lsp_zero = require("lsp-zero")
 		local lsp_format = require("lsp-format")
 		lsp_format.setup({})
-		lsp_zero.on_attach(function(_, bufnr)
+		local lsp_attach = function(_, bufnr)
 			lsp_zero.default_keymaps({ buffer = bufnr })
-		end)
+		end
+		lsp_zero.extend_lspconfig({
+			capabilities = require("cmp_nvim_lsp").default_capabilities(),
+			lsp_attach = lsp_attach,
+			float_border = "rounded",
+			sign_text = true,
+		})
 
 		require("neodev").setup({}) -- configure lua_ls settings for neovim plugin development
 		require("mason").setup({})
@@ -89,6 +95,7 @@ return {
 			},
 			--- (Optional) Show source name in completion menu
 			formatting = cmp_format,
+			mapping = cmp.mapping.preset.insert({}),
 		})
 	end,
 }
