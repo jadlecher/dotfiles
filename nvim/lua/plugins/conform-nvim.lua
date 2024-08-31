@@ -17,9 +17,17 @@ return {
 		formatters_by_ft = {
 			lua = { "stylua" },
 			python = { "isort", "black" },
-			javascript = { { "prettierd" } },
+			html = { "prettierd" },
+			javascript = { "prettierd" },
+			javascriptreact = { "prettierd" },
+			typescript = { "prettierd" },
+			typescriptreact = { "prettierd" },
+			css = { "prettierd" },
+			toml = { "taplo" },
+			yaml = { "prettierd" },
+			text = { "latexindent" },
 		},
-		format_on_save = { timeout_ms = 500, lsp_fallback = true },
+		format_on_save = { timeout_ms = 2000, lsp_fallback = true },
 	},
 	init = function()
 		vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
