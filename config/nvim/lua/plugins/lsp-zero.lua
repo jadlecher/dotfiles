@@ -48,6 +48,7 @@ return {
 				"ansiblels",
 				"terraformls",
 				-- misc
+				"bashls",
 				"texlab",
 			},
 			handlers = {

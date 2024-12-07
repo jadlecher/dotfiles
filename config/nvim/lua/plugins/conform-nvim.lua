@@ -15,6 +15,7 @@ return {
 	},
 	opts = {
 		formatters_by_ft = {
+			sh = { "shfmt" },
 			lua = { "stylua" },
 			python = { "isort", "black" },
 			html = { "prettierd" },
