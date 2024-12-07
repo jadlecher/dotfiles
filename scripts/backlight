@@ -1,0 +1,19 @@
+#!/bin/bash
+name=backlight
+if [ "$#" -ne 1 ]; then
+  echo "$name requires 1 argument"
+  exit 1
+fi
+percentage="$1"
+if ! [[ $percentage =~ ^[0-9]+$ ]]; then
+  echo "$name argument must be a number between 0 and 100"
+  exit 1
+fi
+if ((percentage > 100 || percentage < 0)); then
+  echo "$name argument must be a number between 0 and 100"
+  exit 1
+fi
+device=/sys/class/backlight/intel_backlight
+read maximum <${device}/max_brightness
+value=$((percentage * maximum / 100))
+echo $value >>${device}/brightness
