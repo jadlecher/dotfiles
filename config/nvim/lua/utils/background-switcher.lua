@@ -1,62 +1,58 @@
 local M = {}
 
-local function read_xsettings()
-	local xsettings_file = os.getenv("HOME")..'/.config/xsettingsd/xsettingsd.conf'
-	local xsettings = nil
-	if vim.fn.filereadable(xsettings_file) > 0 then
-		xsettings = vim.fn.readfile(xsettings_file)
+local themes = { light = "light", dark = "dark" }
+
+local function read_gsettings()
+	local command = "gsettings get org.gnome.desktop.interface color-scheme"
+	local output = vim.fn.system(command)
+	if vim.v.shell_error ~= 0 then
+		error('an error occurred when exectuing the command "' .. command .. '": ' .. output)
 	end
-	return xsettings
+	local theme = string.match(output, "'prefer%-(%a+)'")
+	theme = themes[theme] -- attempt to coerce to valid value
+	if theme == nil then
+		error('invalid gsettings color-scheme "' .. output .. '"')
+	end
+	return theme
 end
 
-local function find(key, values)
-	for _, value in pairs(values) do
-		if value:find(key) then
-			return value
+local function read_xsettings()
+	-- determine if 'Net/ThemeName' in xsettingsd.conf matches expected light or dark backgrounds
+	local xsettings_file = os.getenv("HOME") .. "/.config/xsettingsd/xsettingsd.conf"
+	if vim.fn.filereadable(xsettings_file) > 0 then
+		local xsettings = vim.fn.readfile(xsettings_file)
+		local background = nil
+		for _, value in pairs(xsettings) do
+			background = string.match(value, 'Net/ThemeName%s+"([%a%-]+)"'):lower()
+			break
+		end
+		if background == nil then
+			return nil
+		end
+		for key, value in pairs(require("catppuccin").options.background) do
+			if background:find(value) and themes[key] ~= nil then
+				return key
+			end
 		end
 	end
 	return nil
 end
 
-local function extract_quoted_value(text)
-	local first = text:find('"')
-	local last = #text - text:reverse():find('"') + 1
-	if first and last and last - first >= 2 then
-		return text:sub(first + 1, last - 1)
-	else
-		return nil
-	end
-end
-
 local function get_gtk_theme()
-	local value = nil
-	local xsettings = read_xsettings()
-	if xsettings then
-		key = "Net/ThemeName"
-		local match = find(key, xsettings)
-		if match then
-			value = extract_quoted_value(match)
-		end
-	end
-	return value
-end
-
-local function background_value()
-	local catppuccin = require("catppuccin")
-	local light_value = catppuccin.options.background["light"]
-	local dark_value = catppuccin.options.background["dark"]
-	local gtk_theme = get_gtk_theme():lower()
-	if gtk_theme:find(light_value) then
-		return "light"
-	elseif gtk_theme:find(dark_value) then
-		return "dark"
+	local theme = nil
+	if vim.fn.executable("gsettings") == 1 then
+		theme = read_gsettings()
 	else
-		return nil
+		theme = read_xsettings()
 	end
+	return theme
 end
 
 function M.switch()
-	vim.opt.background = background_value()
+	local background = get_gtk_theme()
+	if background ~= nil then
+		vim.opt.background = background
+	end
 end
 
 return M
