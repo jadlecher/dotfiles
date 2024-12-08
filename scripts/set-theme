@@ -1,65 +1,17 @@
-#!/bin/bash
-xsettingsd_light_theme="Catppuccin-Latte-Lavender"
-xsettingsd_dark_theme="Catppuccin-Mocha-Lavender"
-kitty_light_theme="Catppuccin-Latte"
-kitty_dark_theme="Catppuccin-Mocha"
-
-set_xsettingsd_theme() {
-	if pgrep -x "xsettingsd" > /dev/null; then
-		xsettingsd_conf=~/.config/xsettingsd/xsettingsd.conf
-    echo setting xsettingsd theme to $1
-		echo 'Net/ThemeName "'$1'"' > $xsettingsd_conf
-		killall -q -HUP xsettingsd
-	fi
-}
-
-set_gsettings_theme() {
-  bin=gsettings
-  if [ -x "$(command -v $bin)" ]; then
-    echo setting $bin preferred color scheme to $1
-    $bin set org.gnome.desktop.interface color-scheme prefer-$1
-  fi
-}
-
-set_vim_theme() {
-	# Send SIGUSR1 signal to all vim processes to trigger theme switch
-  bin=vim
-	for pid in $(pgrep $bin)
-		do kill -SIGUSR1 $pid
-	done
-}
-
-set_kitty_theme() {
-  bin=kitty
-  if [ -x "$(command -v $bin)" ]; then
-    echo setting $bin theme to $1
-    $bin +kitten themes --reload-in=all $kitty_theme
-  fi
-}
-
-script_name="set_theme"
-if [ $# -ne 1 ]; then
-	echo $script_name "requires a value"
-	exit 1
-fi
-
-theme="$1"
-case $theme in
-	light)
-		xsettingsd_theme=$xsettingsd_light_theme
-		kitty_theme=$kitty_light_theme
-		;;
-	dark)
-		xsettingsd_theme=$xsettingsd_dark_theme
-		kitty_theme=$kitty_dark_theme
-		;;
-	*)
-		echo 'Unknown theme "'$theme'"'
-		exit 1
-		;;
+#!/bin/bash -e
+case $1 in
+light | dark)
+  value=prefer-$1
+  echo setting gsettings preferred color scheme to \'$value\'
+  gsettings set org.gnome.desktop.interface color-scheme $value
+  for program in kitty nvim i3status-rust mako sway; do
+    ~/.config/$program/scripts/set-theme
+  done
+  makoctl reload
+  exit 0
+  ;;
+*)
+  echo 'Unknown theme "'$theme'"'
+  exit 1
+  ;;
 esac
-set_gsettings_theme $theme
-set_xsettingsd_theme $xsettingsd_theme
-set_kitty_theme $kitty_theme
-set_vim_theme
-exit 0

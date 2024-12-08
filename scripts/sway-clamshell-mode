@@ -1,0 +1,29 @@
+#!/bin/sh
+
+LAPTOP_OUTPUT="eDP-1"
+DISPLAY_COUNT=$(swaymsg -t get_outputs | grep name | wc -l)
+
+case "$1" in
+on) ;;
+off)
+  swaymsg output "$LAPTOP_OUTPUT" enable
+  ;;
+"")
+  LID_STATE_FILE="/proc/acpi/button/lid/LID0/state"
+  read -r LS <"$LID_STATE_FILE"
+  ;;
+*)
+  echo 'unknown mode "'$theme'"'
+  exit 1
+  ;;
+esac
+exit 0
+
+case "$LS" in
+*open) swaymsg output "$LAPTOP_OUTPUT" enable ;;
+*closed) swaymsg output "$LAPTOP_OUTPUT" disable ;;
+*)
+  echo "Could not get lid state" >&2
+  exit 1
+  ;;
+esac

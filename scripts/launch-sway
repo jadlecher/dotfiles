@@ -2,4 +2,8 @@
 export XDG_CURRENT_DESKTOP=sway # xdg-desktop-portal
 export XDG_SESSION_DESKTOP=sway # systemd
 export XDG_SESSION_TYPE=wayland # xdg/systemd
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export GLFW_IM_MODULE=ibus
+export XMODIFIERS=@im=fcitx
 dbus-run-session sway --unsupported-gpu

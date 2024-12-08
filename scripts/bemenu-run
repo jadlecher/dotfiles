@@ -1,4 +1,5 @@
-# catppuccin mocha
+#!/bin/bash
+# launch sway with catppuccin mocha theme
 BEMENU_OPTS=(
   --fb "#1e1e2e"
   --ff "#cdd6f4"
