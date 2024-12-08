@@ -1,2 +1,5 @@
 # ignore lazy.nvim "lock" file containing currently installed versions of plugins
 nvim/lazy-lock.json
+
+# ignore vim session files
+Session.vim
