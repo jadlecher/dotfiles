@@ -1,6 +1,3 @@
-# update theme
-#exec_always ~/.config/sway/scripts/set-theme auto
-
 include ./conf-enabled/*.conf
 
 # export variables required for dbus tools
@@ -11,3 +8,7 @@ exec dbus-update-activation-environment \
 exec mako
 # enable fcitx input
 exec_always /usr/libexec/fcitx5-wayland-launcher
+
+blur enable
+gaps inner 5
+corner_radius 8
