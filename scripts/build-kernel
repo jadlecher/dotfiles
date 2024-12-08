@@ -1,0 +1,6 @@
+#!/bin/bash
+if (( $EUID != 0 )); then
+  echo "build-kernel must be run as root"
+      exit
+fi
+cd /usr/src/linux && make -j`nproc` && make modules_install && emerge @module-rebuild && make install
