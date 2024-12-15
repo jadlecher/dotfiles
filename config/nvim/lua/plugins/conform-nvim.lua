@@ -1,6 +1,9 @@
 return {
 	"stevearc/conform.nvim",
-	dependencies = { "WhoIsSethDaniel/mason-tool-installer.nvim" },
+	dependencies = {
+		"williamboman/mason.nvim",
+		"zapling/mason-conform.nvim",
+	},
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },
 	keys = {
@@ -27,6 +30,8 @@ return {
 			toml = { "taplo" },
 			yaml = { "prettierd" },
 			text = { "latexindent" },
+			-- cxx
+			cmake = { "cmake_format" },
 		},
 		format_on_save = { timeout_ms = 2000, lsp_fallback = true },
 	},
@@ -34,15 +39,8 @@ return {
 		vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 	end,
 	config = function(_, opts)
+		require("mason-conform").setup({})
 		local conform = require("conform")
 		conform.setup(opts)
-		local required_formatters = vim.fn.map(conform.list_all_formatters(), function(_, formatter)
-			return formatter.name
-		end)
-		local installer = require("mason-tool-installer")
-		installer.setup({
-			ensure_installed = required_formatters,
-		})
-		vim.api.nvim_command("MasonToolsInstall")
 	end,
 }
