@@ -1,14 +1,2 @@
+# vim: filetype=swayconfig
 include ./conf-enabled/*.conf
-
-# export variables required for dbus tools
-exec dbus-update-activation-environment \
-	WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK I3SOCK XCURSOR_SIZE XCURSOR_THEME
-
-# enable notifications
-exec mako
-# enable fcitx input
-exec_always /usr/libexec/fcitx5-wayland-launcher
-
-blur enable
-gaps inner 5
-corner_radius 8
