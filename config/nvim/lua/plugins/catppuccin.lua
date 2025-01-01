@@ -7,6 +7,7 @@ return {
 				light = "latte",
 				dark = "mocha",
 			},
+			transparent_background = true,
 		})
 		vim.cmd.colorscheme("catppuccin")
 		require("utils.background-switcher").switch()
