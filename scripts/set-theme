@@ -4,7 +4,7 @@ light | dark)
   value=prefer-$1
   echo setting gsettings preferred color scheme to \'$value\'
   gsettings set org.gnome.desktop.interface color-scheme $value
-  for program in kitty nvim i3status-rust mako sway; do
+  for program in nvim kitty i3status-rust mako sway; do
     ~/.config/$program/scripts/set-theme
   done
   makoctl reload
