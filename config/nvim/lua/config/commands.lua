@@ -13,3 +13,8 @@ vim.api.nvim_create_user_command("Redir", function(ctx)
 	vim.cmd("Scratch")
 	vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
 end, { nargs = "+", complete = "command" })
+
+-- disable line numbers in new terminal buffers
+vim.api.nvim_create_autocmd("TermOpen", {
+	command = "setlocal nonumber | setlocal norelativenumber",
+})
