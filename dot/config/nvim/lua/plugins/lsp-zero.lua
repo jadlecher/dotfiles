@@ -50,6 +50,7 @@ return {
 				-- misc
 				"bashls",
 				"texlab",
+				"helm_ls",
 			},
 			handlers = {
 				lsp_zero.default_setup,
@@ -70,12 +71,23 @@ return {
 						end,
 					})
 				end,
+				texlab = function()
+					require("lspconfig").texlab.setup({
+						settings = {
+							texlab = {
+								build = {
+									onSave = true,
+									forwardSearchAfter = true,
+								},
+								forwardSearch = {
+									executable = "zathura",
+									args = { "--synctex-forward", "%l:1:%f", "%p" },
+								},
+							},
+						},
+					})
+				end,
 			},
-			texlab = function()
-				require("lspconfig").texlab.setup({
-					auxDirectory = "./build",
-				})
-			end,
 		})
 
 		local cmp = require("cmp")

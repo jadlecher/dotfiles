@@ -1,0 +1,40 @@
+#!/bin/bash -e
+accent=lavender
+case $1 in
+light)
+  flavor=latte
+  ;;
+dark)
+  flavor=mocha
+  ;;
+*)
+  echo 'Unknown theme "'$theme'"'
+  exit 1
+  ;;
+esac
+
+theme_dir=~/.local/share/themes
+if [ ! -d "$theme_dir" ]; then
+  mkdir -p "$theme_dir"
+fi
+
+theme="catppuccin-${flavor}-${accent}-standard+default"
+existing_themes=$(find "${theme_dir}" -type d -maxdepth 1 -name "${theme}*" | wc -l)
+if [ "$existing_themes" -eq 0 ]; then
+  echo downloading gtk theme ${theme}
+  url="https://github.com/catppuccin/gtk/releases/latest/download"
+  archive="${theme}.zip"
+  curl -LsS "${url}/$archive" -o "/tmp/${archive}"
+  unzip -qq "/tmp/${archive}" -d "$theme_dir"
+fi
+
+config_dir=~/.config
+for schema in "gtk-3.0" "gtk-4.0"; do
+  target_dir="${config_dir}/${schema}"
+  if [ ! -d "$target_dir" ]; then
+    mkdir -p "$target_dir"
+  fi
+  find "$theme_dir/$theme/$schema" -mindepth 1 -maxdepth 1 -exec \
+    sh -c 'ln -sf "{}" "${1}/$(basename {})"' sh "$target_dir" \;
+done
+exit 0
