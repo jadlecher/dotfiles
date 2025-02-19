@@ -29,7 +29,7 @@ return {
 			css = { "prettierd" },
 			toml = { "taplo" },
 			yaml = { "prettierd" },
-			text = { "latexindent" },
+			tex = { "latexindent" },
 			-- cxx
 			cmake = { "cmake_format" },
 		},
