@@ -9,13 +9,13 @@ export XWAYLAND_NO_GLAMOR=1
 
 # Set wlroots renderer to Vulkan to avoid flickering
 #USE_VULKAN=true
-if [ "$USE_VULKAN" == "true" ]; then
-  export WLR_RENDERER=vulkan
-  export WLR_DRM_DEVICES="/dev/dri/card1"
-  #export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
-  export WLR_NO_HARDWARE_CURSORS=1
-  #export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json
-fi
+#if [ "$USE_VULKAN" == "true" ]; then
+#  export WLR_RENDERER=vulkan
+#  export WLR_DRM_DEVICES="/dev/dri/card1"
+#  #export WLR_DRM_DEVICES="/dev/dri/card0:/dev/dri/card1"
+#  export WLR_NO_HARDWARE_CURSORS=1
+#  #export VK_DRIVER_FILES=/usr/share/vulkan/icd.d/nvidia_icd.json
+#fi
 
 # General wayland environment variables
 export XDG_SESSION_TYPE=wayland

@@ -32,7 +32,7 @@ handle_options() {
 install_entry() {
   echo "Creating symbolic link to $1 in $2"
   if ! ${dry_run}; then
-    ln -sf "$1" "$2"
+    (cd "$2" && ln -sf "$1")
   fi
 }
 install_dir_entries() {
@@ -43,8 +43,7 @@ install_dir_entries() {
     mkdir "$target"
   fi
   for entry in "$source"/*; do
-    basename=$(basename "$entry")
-    install_entry "$entry" "$target/${basename}"
+    install_entry "$entry" "$target"
   done
 }
 
