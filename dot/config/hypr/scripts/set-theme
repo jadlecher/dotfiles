@@ -1,31 +1,6 @@
 #!/bin/bash -e
-theme=$(gsettings get org.gnome.desktop.interface color-scheme | grep -oE "light|dark")
-case $theme in
-dark)
-  blacklist=light
-  ;;
-light)
-  blacklist=dark
-  ;;
-*)
-  echo "could not determine current theme"
-  exit 1
-  ;;
-esac
-# read current theme
-conf_dir="$HOME/.config/hypr"
-cd "$conf_dir"
-file=./conf-enabled/current-theme
-[[ -f $file ]] && current_theme=$(<$file)
-# change theme if necessary
-if [[ "$theme" != "$current_theme" ]]; then
-  # clear enabled configs
-  rm -f ./conf-enabled/*.conf
-  # copy all configs except ones matching the opposite theme
-  find ./conf-available -name '*.conf' -and -not -name "*-${blacklist}.conf" \
-    -exec ln -s ".{}" ./conf-enabled/ \;
-  # record new theme
-  echo $theme >"$file"
-  # reload hyprland
-  hyprctl reload
-fi
+config_dir="$HOME/.config/hypr"
+input_dir="$config_dir/conf-available"
+output_dir="$config_dir/conf-enabled"
+wallpaper_conf="$config_dir/wallpapers.yaml"
+"$config_dir/scripts/set-theme.py" -i "$input_dir" -o "$output_dir" -w "$wallpaper_conf"
