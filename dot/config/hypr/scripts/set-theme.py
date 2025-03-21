@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -71,16 +72,63 @@ def sync_dir(input_dir: str, output_dir: str, files: list[str]):
             os.remove(path)
 
 
+def get_outputs() -> list[dict]:
+    process = subprocess.check_output(["wlr-randr", "--json"], text=True)
+    return json.loads(process)
+
+
+def start_wallpaper_daemon():
+    program = "swww-daemon"
+    if subprocess.run(["pidof", program], stdout=subprocess.DEVNULL).returncode != 0:
+        print(f"Starting {program}")
+        subprocess.Popen(
+            [program], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+
+
 def set_wallpaper(output: str, path: str):
-    subprocess.run(["hyprctl", "hyprpaper", "reload", f"{output},{path}"], check=True)
+    subprocess.run(
+        [
+            "swww",
+            "img",
+            "--transition-type",
+            "fade",
+            "--transition-step",
+            "1",
+            "--transition-fps",
+            "120",
+            "--outputs",
+            output,
+            path,
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def get_output(outputs: list[dict], desc: str) -> str | None:
+    for output in outputs:
+        name = output["name"]
+        matches = re.compile(f"(.+) \\({name}\\)$").search(output["description"])
+        if matches != None:
+            if desc == matches.group(1):
+                return name
+    return None
 
 
 def apply_wallpaper_config(theme: str, config: str):
+    outputs = get_outputs()
+    desc_pattern = re.compile("^desc:(.+)")
     with open(config, "r") as file:
         for display, options in yaml.safe_load(file).items():
-            if theme in options:
+            output = display
+            matches = desc_pattern.search(output)
+            if matches != None:
+                desc = matches.group(1)
+                output = get_output(outputs, desc)
+            if theme in options and output != None:
                 wallpaper = options[theme]
-                set_wallpaper(display, wallpaper)
+                set_wallpaper(output, wallpaper)
 
 
 parser = argparse.ArgumentParser(prog="set-theme")
@@ -107,4 +155,5 @@ output_dir = os.path.abspath(args.output_dir)
 sync_dir(input_dir, output_dir, files)
 
 if args.wallpaper_config:
+    start_wallpaper_daemon()
     apply_wallpaper_config(theme, args.wallpaper_config)
