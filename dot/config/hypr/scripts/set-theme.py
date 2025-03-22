@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+import time
 from os import listdir
 from os.path import isfile, join
 
@@ -78,12 +79,28 @@ def get_outputs() -> list[dict]:
 
 
 def start_wallpaper_daemon():
-    program = "swww-daemon"
-    if subprocess.run(["pidof", program], stdout=subprocess.DEVNULL).returncode != 0:
-        print(f"Starting {program}")
+    command = ["swww-daemon", "--no-cache"]
+    if subprocess.run(["pidof", command[0]], stdout=subprocess.DEVNULL).returncode != 0:
+        print(f"Starting {command[0]}")
         subprocess.Popen(
-            [program], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            command,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
+
+        timeout = 10  # seconds
+        start = time.time()
+        end = start
+        while (
+            end - start < timeout
+            and subprocess.run(
+                ["swww", "clear"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            ).returncode
+            != 0
+        ):
+            end = time.time()
+        if end - start >= timeout:
+            raise RuntimeError(f"Timed out while starting {command[0]}")
 
 
 def set_wallpaper(output: str, path: str):
@@ -94,7 +111,7 @@ def set_wallpaper(output: str, path: str):
             "--transition-type",
             "fade",
             "--transition-step",
-            "1",
+            "2",
             "--transition-fps",
             "120",
             "--outputs",
