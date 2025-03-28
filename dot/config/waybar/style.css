@@ -32,6 +32,10 @@
   border-radius: 1rem;
 }
 
+#submap {
+  color: @red;
+}
+
 #custom-music,
 #tray,
 #backlight,

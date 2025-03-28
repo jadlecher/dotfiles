@@ -2,7 +2,8 @@
 {
   "spacing": 4,
   "modules-left": [
-    "hyprland/workspaces"
+    "hyprland/workspaces",
+    "hyprland/submap"
   ],
   "modules-right": [
     "network",
@@ -15,6 +16,10 @@
     "battery",
     "clock"
   ],
+  "hyprland/submap": {
+    "format": "\ue690 {}",
+    "tooltip": false // the tooltip is dumb
+  },
   "keyboard-state": {
     "numlock": true,
     "capslock": true,
