@@ -1,1 +1,1 @@
-vim.keymap.set('n', '<c-k>', '<cmd>ClangdSwitchSourceHeader<cr>')
+vim.keymap.set("n", "<c-k>", "<cmd>LspClangdSwitchSourceHeader<cr>")

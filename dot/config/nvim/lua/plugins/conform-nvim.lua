@@ -32,6 +32,7 @@ return {
 			tex = { "latexindent" },
 			-- cxx
 			cmake = { "cmake_format" },
+			glsl = { "clang-format" },
 		},
 		format_on_save = { timeout_ms = 2000, lsp_fallback = true },
 	},
