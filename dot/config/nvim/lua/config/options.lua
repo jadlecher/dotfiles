@@ -1,8 +1,5 @@
--- configure global editor options
+-- global editor options
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.number = true
-
--- required for nvim-colorizer
-vim.opt.termguicolors = true

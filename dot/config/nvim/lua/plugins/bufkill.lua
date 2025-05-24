@@ -1,1 +1,0 @@
-return { 'qpkorr/vim-bufkill' };

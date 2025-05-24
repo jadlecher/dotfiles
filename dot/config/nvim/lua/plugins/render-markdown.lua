@@ -1,6 +1,7 @@
 return {
 	"MeanderingProgrammer/render-markdown.nvim",
-	dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" },
-	ft = { "markdown", "codecompanion" },
-	opts = {},
+	ft = function(_, filetypes)
+		-- Render markdown in codecompanion buffers
+		return vim.list_extend(filetypes, { "codecompanion" })
+	end,
 }

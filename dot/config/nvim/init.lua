@@ -1,5 +1,3 @@
-require("config.options")
+-- bootstrap lazy.nvim, LazyVim and plugins
 require("config.lazy")
-require("lazy").setup("plugins") -- load all plugins
-require("config.commands")
-require("config.mappings")
+require("utils.background-switcher").switch()
