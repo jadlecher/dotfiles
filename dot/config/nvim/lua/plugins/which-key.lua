@@ -4,6 +4,7 @@ return {
 		local groups = { {
 			"<leader>a",
 			group = "ai",
+			mode = { "n", "v" },
 		} }
 		opts.spec = opts.spec or {}
 		for _, group in ipairs(groups) do
