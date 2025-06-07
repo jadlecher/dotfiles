@@ -1,5 +1,2 @@
--- global editor options
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.opt.number = true
+vim.opt.clipboard = "" -- prevent LazyVim from overriding default clipbard
+-- vim.g.snacks_animate = false -- disable animations
