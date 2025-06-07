@@ -7,9 +7,8 @@ map("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "CodeCompan
 map("n", "<leader>ah", "<cmd>CodeCompanionHistory<cr>", { desc = "CodeCompanion History" })
 map(
 	"v",
-	"<leader>ac",
+	"<leader>aa",
 	require("plugins.codecompanion.commands").add_selection_to_chat,
 	{ desc = "CodeCompanion Chat: Add Selection" }
 )
-
-vim.cmd([[cab cc CodeCompanion]]) -- expand 'cc' into 'CodeCompanion' in the command line
+map("v", "<leader>ac", ":CodeCompanion<space>", { desc = "CodeCompanion Inline Assistant" })
