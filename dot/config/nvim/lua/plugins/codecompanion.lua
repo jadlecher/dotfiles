@@ -31,7 +31,20 @@ return {
 			end,
 		},
 		strategies = {
-			chat = { adapter = "gemini" },
+			chat = {
+				adapter = "gemini",
+				-- override default binding for options (?) to preserve reverse search
+				keymaps = {
+					options = {
+						modes = {
+							n = "gh",
+						},
+						callback = "keymaps.options",
+						description = "Options",
+						hide = true,
+					},
+				},
+			},
 			inline = { adapter = "gemini" },
 		},
 		opts = {
