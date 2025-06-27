@@ -46,7 +46,7 @@ return {
 				keymaps = {
 					options = {
 						modes = {
-							n = "gh",
+							n = "gH",
 						},
 						callback = "keymaps.options",
 						description = "Options",
