@@ -48,15 +48,29 @@ return {
 			inline = { adapter = "gemini" },
 		},
 		opts = {
-			system_prompt = function(_)
-				local prompt_file = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/system_prompt.md"
-				local prompt_content = read_file(prompt_file)
-				if prompt_content then
-					return prompt_content
-				else
-					print("Error reading system prompt file: " .. prompt_file)
+			system_prompt = function(opts)
+				local prompts_dir = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/prompts"
+				local adapter_name = opts.adapter and opts.adapter.name
+
+				-- Try adapter-specific prompt first
+				local prompt_content = nil
+				if adapter_name then
+					local prompt_file = prompts_dir .. "/" .. adapter_name .. "/system.md"
+					prompt_content = read_file(prompt_file)
+				end
+
+				-- Fallback to default prompt
+				if prompt_content == nil or prompt_content == "" then
+					local prompt_file = prompts_dir .. "/system.md"
+					prompt_content = read_file(prompt_file)
+				end
+
+				-- If neither is found, print an error and return an empty string
+				if prompt_content == nil or prompt_content == "" then
+					print("CodeCompanion: No system prompt found. Looked for adapter-specific and default prompts.")
 					return ""
 				end
+				return prompt_content
 			end,
 		},
 		display = {
