@@ -24,7 +24,16 @@ return {
 				show_model_choices = true,
 			},
 			gemini = function()
-				return require("codecompanion.adapters").extend("gemini", {})
+				local choices = require("codecompanion.adapters.gemini").schema.model.choices
+				choices = vim.list_extend(vim.deepcopy(choices), { "gemini-2.5-flash", "gemini-2.5-pro" })
+				return require("codecompanion.adapters").extend("gemini", {
+					schema = {
+						model = {
+							default = "gemini-2.5-pro",
+							choices = choices,
+						},
+					},
+				})
 			end,
 			anthropic = function()
 				return require("codecompanion.adapters").extend("anthropic", {})
