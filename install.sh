@@ -32,7 +32,7 @@ handle_options() {
 install_entry() {
   echo "Creating symbolic link to $1 in $2"
   if ! ${dry_run}; then
-    (cd "$2" && ln -sf "$1")
+    (cd "$2" && ln -sf "$1" .)
   fi
 }
 install_dir_entries() {
