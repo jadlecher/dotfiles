@@ -38,10 +38,13 @@ return {
 			anthropic = function()
 				return require("codecompanion.adapters").extend("anthropic", {})
 			end,
+			openai = function()
+				return require("codecompanion.adapters").extend("openai", {})
+			end,
 		},
 		strategies = {
 			chat = {
-				adapter = "gemini",
+				adapter = "openai",
 				-- override default binding for options (?) to preserve reverse search
 				keymaps = {
 					options = {
@@ -54,7 +57,7 @@ return {
 					},
 				},
 			},
-			inline = { adapter = "gemini" },
+			inline = { adapter = "openai" },
 		},
 		opts = {
 			system_prompt = function(opts)
