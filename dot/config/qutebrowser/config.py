@@ -45,4 +45,6 @@ catppuccin_palette = "mocha" if theme_style == "dark" else "latte"
 
 config.load_autoconfig()
 catppuccin.setup(c, catppuccin_palette, True)
+config.set("colors.webpage.prefers_color_scheme_dark", theme_style == "dark")
 config.set("colors.webpage.darkmode.enabled", theme_style == "dark")
+config.set("colors.webpage.bg", "black" if theme_style == "dark" else "white")
