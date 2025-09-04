@@ -13,7 +13,17 @@ if ((percentage > 100 || percentage < 0)); then
   echo "$name argument must be a number between 0 and 100"
   exit 1
 fi
-device=/sys/class/backlight/intel_backlight
-read maximum <${device}/max_brightness
-value=$((percentage * maximum / 100))
-echo $value >>${device}/brightness
+
+for device in /sys/class/backlight/*; do
+  max_file="$device/max_brightness"
+  brightness_file="$device/brightness"
+
+  # Skip if device files are missing (e.g. empty directory, permissions, etc.)
+  if [[ ! -r $max_file || ! -w $brightness_file ]]; then
+    continue
+  fi
+
+  read -r maximum <"$max_file"
+  value=$((percentage * maximum / 100))
+  echo $value >"$brightness_file"
+done

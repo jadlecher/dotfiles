@@ -127,7 +127,7 @@ def get_output(outputs: list[dict], desc: str) -> str | None:
     for output in outputs:
         name = output["name"]
         matches = re.compile(f"(.+) \\({name}\\)$").search(output["description"])
-        if matches != None:
+        if matches is not None:
             if desc == matches.group(1):
                 return name
     return None
@@ -140,10 +140,10 @@ def apply_wallpaper_config(theme: str, config: str):
         for display, options in yaml.safe_load(file).items():
             output = display
             matches = desc_pattern.search(output)
-            if matches != None:
+            if matches is not None:
                 desc = matches.group(1)
                 output = get_output(outputs, desc)
-            if theme in options and output != None:
+            if theme in options and output is not None:
                 wallpaper = options[theme]
                 set_wallpaper(output, wallpaper)
 

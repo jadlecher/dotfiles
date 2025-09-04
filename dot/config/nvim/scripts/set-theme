@@ -1,6 +1,0 @@
-#!/bin/bash -e
-# send SIGUSR1 signal to all nvim processes to trigger theme switch
-bin=nvim
-for pid in $(pgrep $bin); do
-  kill -SIGUSR1 $pid
-done
