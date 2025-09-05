@@ -32,7 +32,5 @@ if ! sudo efibootmgr -n "$boot_number" >/dev/null; then
   exit 1
 fi
 
-echo "Windows will boot next. Rebooting in 3 seconds... (Ctrl+C to cancel)"
-sleep 3
-
+echo "Windows will boot next."
 loginctl reboot
