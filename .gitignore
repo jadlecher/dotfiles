@@ -3,3 +3,6 @@ nvim/lazy-lock.json
 
 # ignore vim session files
 Session.vim
+
+# Python temporary files
+**/__pycache__/
