@@ -1,0 +1,38 @@
+#!/bin/bash
+# Boot to Windows Boot Manager on next reboot
+set -euo pipefail
+
+# Check if efibootmgr is available
+if ! command -v efibootmgr &>/dev/null; then
+  echo "Error: efibootmgr not found." >&2
+  exit 1
+fi
+
+# Find the Windows Boot Manager entry
+windows_entry=$(efibootmgr | grep -i "Windows Boot Manager" || true)
+
+if [[ -z "$windows_entry" ]]; then
+  echo "Error: 'Windows Boot Manager' entry not found." >&2
+  echo "Available boot entries:" >&2
+  efibootmgr >&2
+  exit 1
+fi
+
+# Extract boot number (e.g., "0001" from "Boot0001* Windows Boot Manager")
+boot_number=$(echo "$windows_entry" | sed -n 's/^Boot\([0-9A-Fa-f]\{4\}\).*/\1/p')
+
+if [[ -z "$boot_number" ]]; then
+  echo "Error: Could not extract boot number from: $windows_entry" >&2
+  exit 1
+fi
+
+# Set next boot entry
+if ! sudo efibootmgr -n "$boot_number" >/dev/null; then
+  echo "Error: Failed to set next boot entry" >&2
+  exit 1
+fi
+
+echo "Windows will boot next. Rebooting in 3 seconds... (Ctrl+C to cancel)"
+sleep 3
+
+loginctl reboot
