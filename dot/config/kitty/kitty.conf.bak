@@ -1,9 +1,0 @@
-globinclude ./conf.d/*.conf
-
-#linux_display_server x11
-background_opacity .80
-
-# BEGIN_KITTY_THEME
-# Catppuccin-Latte
-include current-theme.conf
-# END_KITTY_THEME
