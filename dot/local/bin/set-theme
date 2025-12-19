@@ -4,8 +4,10 @@ light | dark)
   value=prefer-$1
   echo setting gsettings preferred color scheme to \'"$value"\'
   gsettings set org.gnome.desktop.interface color-scheme "$value"
-  for program in nvim kitty i3status-rust mako sway qutebrowser; do
-    ~/.config/$program/scripts/set-theme.sh
+  for program in kitty nvim i3status-rust mako sway qutebrowser waybar hypr; do
+    if ! ~/.config/$program/scripts/set-theme.sh; then
+      echo "Warning: Failed to set theme for $program" >&2
+    fi
   done
   makoctl reload
   exit 0
