@@ -10,12 +10,16 @@ end
 
 return {
 	"olimorris/codecompanion.nvim",
+	tag = "v17.33.0",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-treesitter/nvim-treesitter",
-		"echasnovski/mini.diff",
+		"nvim-mini/mini.diff",
 		-- extensions
-		"ravitemer/codecompanion-history.nvim",
+		{
+			"ravitemer/codecompanion-history.nvim",
+			commit = "eb99d256352144cf3b6a1c45608ec25544a0813d",
+		},
 	},
 	opts = {
 		adapters = {
