@@ -13,3 +13,15 @@ for module_info in pkgutil.iter_modules(conf_d.__path__):
     module = importlib.import_module(f"conf_d.{module_info.name}")
     if hasattr(module, "apply"):
         module.apply(config, c)
+
+# Set nvim as the default editor
+c.editor.command = [
+    "kitty",
+    "-o",
+    "allow_remote_control=yes",
+    "nvim",
+    "-f",
+    "{file}",
+    "-c",
+    "normal {line}G{column0}l",
+]
