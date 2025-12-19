@@ -25,3 +25,10 @@ c.editor.command = [
     "-c",
     "normal {line}G{column0}l",
 ]
+
+google = "www.google.com"
+c.url.start_pages = [google]
+c.url.default_page = google
+c.url.searchengines = {
+    "DEFAULT": "https://google.com/search?hl=en&q={}",
+}
