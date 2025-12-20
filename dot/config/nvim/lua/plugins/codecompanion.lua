@@ -10,45 +10,58 @@ end
 
 return {
 	"olimorris/codecompanion.nvim",
-	tag = "v17.33.0",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-treesitter/nvim-treesitter",
 		"nvim-mini/mini.diff",
 		-- extensions
-		{
-			"ravitemer/codecompanion-history.nvim",
-			commit = "eb99d256352144cf3b6a1c45608ec25544a0813d",
-		},
+		{ "ravitemer/codecompanion-history.nvim" },
 	},
+
 	opts = {
 		adapters = {
-			opts = {
-				show_defaults = false,
-				show_model_choices = true,
+			http = {
+				opts = {
+					show_presets = false,
+					show_model_choices = true,
+				},
+
+				gemini = function()
+					return require("codecompanion.adapters").extend("gemini", {})
+				end,
+				anthropic = function()
+					return require("codecompanion.adapters").extend("anthropic", {})
+				end,
+				openai = function()
+					return require("codecompanion.adapters").extend("openai", {})
+				end,
 			},
-			gemini = function()
-				local choices = require("codecompanion.adapters.gemini").schema.model.choices
-				choices = vim.list_extend(vim.deepcopy(choices), { "gemini-2.5-flash", "gemini-2.5-pro" })
-				return require("codecompanion.adapters").extend("gemini", {
-					schema = {
-						model = {
-							default = "gemini-2.5-pro",
-							choices = choices,
-						},
-					},
-				})
-			end,
-			anthropic = function()
-				return require("codecompanion.adapters").extend("anthropic", {})
-			end,
-			openai = function()
-				return require("codecompanion.adapters").extend("openai", {})
-			end,
+
+			acp = {
+				opts = {
+					show_presets = false,
+				},
+
+				claude_code = function()
+					return require("codecompanion.adapters").extend("claude_code", {})
+				end,
+			},
 		},
-		strategies = {
+
+		display = {
 			chat = {
-				adapter = "openai",
+				window = {
+					layout = "buffer",
+				},
+			},
+			diff = {
+				provider = "mini_diff",
+			},
+		},
+
+		interactions = {
+			chat = {
+				adapter = { name = "openai", model = "gpt-5" },
 				-- override default binding for options (?) to preserve reverse search
 				keymaps = {
 					options = {
@@ -62,7 +75,7 @@ return {
 				},
 			},
 			inline = {
-				adapter = "openai",
+				adapter = { name = "openai", model = "gpt-5" },
 				keymaps = {
 					accept_change = {
 						modes = { n = "ga" },
@@ -75,8 +88,7 @@ return {
 					},
 				},
 			},
-		},
-		opts = {
+
 			system_prompt = function(opts)
 				local prompts_dir = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/prompts"
 				local adapter_name = opts.adapter and opts.adapter.name
@@ -102,16 +114,7 @@ return {
 				return prompt_content
 			end,
 		},
-		display = {
-			chat = {
-				window = {
-					layout = "buffer",
-				},
-			},
-			diff = {
-				provider = "mini_diff",
-			},
-		},
+
 		extensions = {
 			history = {
 				enabled = true,
@@ -126,7 +129,4 @@ return {
 			},
 		},
 	},
-	config = function(_, opts)
-		require("codecompanion").setup(opts)
-	end,
 }
