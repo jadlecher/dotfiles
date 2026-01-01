@@ -61,7 +61,7 @@ return {
 
 		interactions = {
 			chat = {
-				adapter = { name = "openai", model = "gpt-5" },
+				adapter = { name = "openai", model = "gpt-4.1" },
 				-- override default binding for options (?) to preserve reverse search
 				keymaps = {
 					options = {
@@ -73,9 +73,38 @@ return {
 						hide = true,
 					},
 				},
+				opts = {
+					system_prompt = function(opts)
+						local prompts_dir = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/prompts"
+						local adapter_name = opts.adapter and opts.adapter.name
+
+						-- Try adapter-specific prompt first
+						local prompt_content = nil
+						if adapter_name then
+							local prompt_file = prompts_dir .. "/" .. adapter_name .. "/system.md"
+							prompt_content = read_file(prompt_file)
+						end
+
+						-- Fallback to default prompt
+						if prompt_content == nil or prompt_content == "" then
+							local prompt_file = prompts_dir .. "/system.md"
+							prompt_content = read_file(prompt_file)
+						end
+
+						-- If neither is found, print an error and return an empty string
+						if prompt_content == nil or prompt_content == "" then
+							print(
+								"CodeCompanion: No system prompt found. Looked for adapter-specific and default prompts."
+							)
+							return ""
+						end
+						return prompt_content
+					end,
+				},
 			},
+
 			inline = {
-				adapter = { name = "openai", model = "gpt-5" },
+				adapter = { name = "openai", model = "gpt-4.1" },
 				keymaps = {
 					accept_change = {
 						modes = { n = "ga" },
@@ -88,31 +117,6 @@ return {
 					},
 				},
 			},
-
-			system_prompt = function(opts)
-				local prompts_dir = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/prompts"
-				local adapter_name = opts.adapter and opts.adapter.name
-
-				-- Try adapter-specific prompt first
-				local prompt_content = nil
-				if adapter_name then
-					local prompt_file = prompts_dir .. "/" .. adapter_name .. "/system.md"
-					prompt_content = read_file(prompt_file)
-				end
-
-				-- Fallback to default prompt
-				if prompt_content == nil or prompt_content == "" then
-					local prompt_file = prompts_dir .. "/system.md"
-					prompt_content = read_file(prompt_file)
-				end
-
-				-- If neither is found, print an error and return an empty string
-				if prompt_content == nil or prompt_content == "" then
-					print("CodeCompanion: No system prompt found. Looked for adapter-specific and default prompts.")
-					return ""
-				end
-				return prompt_content
-			end,
 		},
 
 		extensions = {
