@@ -74,30 +74,24 @@ return {
 					},
 				},
 				opts = {
-					system_prompt = function(opts)
-						local prompts_dir = vim.fn.stdpath("config") .. "/lua/plugins/codecompanion/prompts"
-						local adapter_name = opts.adapter and opts.adapter.name
+					system_prompt = function()
+						local user_prompt_file = vim.fn.getcwd() .. "/.codecompanion/system.md"
+						local fallback_prompt_file = vim.fn.stdpath("config")
+							.. "/lua/plugins/codecompanion/prompts/system.md"
 
-						-- Try adapter-specific prompt first
-						local prompt_content = nil
-						if adapter_name then
-							local prompt_file = prompts_dir .. "/" .. adapter_name .. "/system.md"
-							prompt_content = read_file(prompt_file)
-						end
+						local prompt_content = read_file(user_prompt_file)
 
-						-- Fallback to default prompt
 						if prompt_content == nil or prompt_content == "" then
-							local prompt_file = prompts_dir .. "/system.md"
-							prompt_content = read_file(prompt_file)
+							prompt_content = read_file(fallback_prompt_file)
 						end
 
-						-- If neither is found, print an error and return an empty string
 						if prompt_content == nil or prompt_content == "" then
 							print(
-								"CodeCompanion: No system prompt found. Looked for adapter-specific and default prompts."
+								"CodeCompanion: No system prompt found. Looked for ./.codecompanion/system.md and default prompt."
 							)
 							return ""
 						end
+
 						return prompt_content
 					end,
 				},
